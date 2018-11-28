@@ -47,11 +47,15 @@ ansible-galaxy install
     app_folder: 'nodeappfoldername'
     letsencrypt_email: 'mail@yoursite.com'
  ```   
-## Verify:
-1. This ansible role is assuming you have an app.js file(if not you need to replace the name in the file) 
-2. Port 80 or 4443 needs to be available (Certbot Requires port 80 or 443 to be available)
-3. Default location path for app and remote user
-4. App is running for Certbot challenge (/.well-known/acme-challenge)
+## Verify or Update:
+1. This ansible role is assuming you have the file name "app.js"
+2. Certbot Requires port 80 or 443 to be available
+3. Default location path name  for app and remote user: (ex. '/home/ubuntu/{{ app_folder }}/')
+4. Default location path name for yourapp/public for certbot challenge:
+```yml
+path='/home/ubuntu/{{ app_folder }}/public/.well-known/acme-challenge'
+ ```   
+5. App is up and running for Certbot challenge (/.well-known/acme-challenge)
 
 
 ## Run
