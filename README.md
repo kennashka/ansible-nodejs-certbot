@@ -22,7 +22,8 @@ sudo npm install forever -g
 ## Role Installation 
 
 ```bash
-ansible-galaxy install 
+
+ansible-galaxy install kennashka.ansible_nodejs_certbot
 
 ```
 
