@@ -12,7 +12,7 @@ galaxy_info:
     - networking
     - system
     - certbot
-    - ssl cert
+    - sslcert
     - nodejs
     - letsencrypt
     
