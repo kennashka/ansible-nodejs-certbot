@@ -13,15 +13,15 @@
   vars:
     domain_name: 'yoursite.com'
     domain_name2: 'www.yoursite.com'
-    app_folder: 'nodeappfoldername'
+    app_directory_path: 'add/your/node/app/directory/path'
     letsencrypt_email: 'mail@yoursite.com'
 
   tasks:
     - name: Create a directory for acme challenge to serve through express
-      file: path='/home/ubuntu/{{ app_folder }}/public/.well-known/acme-challenge' state=directory
+      file: path='{{ app_directory_path }}/public/.well-known/acme-challenge' state=directory
 
     - name: Create a directory to store letsencrypt cert files
-      file: path='/home/ubuntu/{{ app_folder }}/sslcert' state=directory
+      file: path='{{ app_directory_path }}/sslcert' state=directory
 
     - name: Upgrade system
       apt: upgrade=dist update_cache=yes
@@ -39,33 +39,33 @@
       apt: name=certbot state=latest
 
     - name: Create letsencrypt certificate
-      command: certbot certonly --webroot -w /home/ubuntu/{{ app_folder }}/public -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} -d {{ domain_name2 }}
+      command: certbot certonly --webroot -w {{ app_directory_path }}/public -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} -d {{ domain_name2 }}
 
 
     - name: Move letsencrypt cert files to cert folder
-      command: cp /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem /etc/letsencrypt/live/{{ domain_name }}/privkey.pem /home/ubuntu/{{ app_folder }}/sslcert
+      command: cp /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem /etc/letsencrypt/live/{{ domain_name }}/privkey.pem {{ app_directory_path }}/sslcert
 
     - name: Install required npm packages
       command: npm install express-force-ssl
       args:
-        chdir: /home/ubuntu/{{ app_folder }}/
+        chdir: {{ app_directory_path }}/
 
     - name: Install required npm packages
       command: npm install helmet --save
       args:
-        chdir: /home/ubuntu/{{ app_folder }}/
+        chdir: {{ app_directory_path }}/
 
     - name: Update app.js file to use https module and cert file path
       blockinfile:
-        path: /home/ubuntu/{{ app_folder }}/app.js
+        path: {{ app_directory_path }}/app.js
         insertafter: "require"
         state: present
         marker: "// Added Path to cert files and npm module variables"
         backup: yes
         content: |
           const options = {
-              cert: fs.readFileSync('/home/ubuntu/{{ app_folder }}/sslcert/fullchain.pem'),
-              key: fs.readFileSync('/home/ubuntu/{{ app_folder }}/sslcert/privkey.pem')
+              cert: fs.readFileSync('{{ app_directory_path }}/sslcert/fullchain.pem'),
+              key: fs.readFileSync('{{ app_directory_path }}/sslcert/privkey.pem')
           };
 
           app.use(require('helmet')());
@@ -73,7 +73,7 @@
 
     - name: Update app.js file to use https module
       blockinfile:
-        path: /home/ubuntu/{{ app_folder }}/app.js
+        path: {{ app_directory_path }}/app.js
         state: present
         insertbefore: BOF
         marker: "// New NPM Module Variables"
@@ -86,7 +86,7 @@
 
     - name: Add new lines where app should listen from app.js
       blockinfile:
-        path: /home/ubuntu/{{ app_folder }}/app.js
+        path: {{ app_directory_path }}/app.js
         state: present
         insertafter: EOF
         marker: "// Https server line"
@@ -96,4 +96,4 @@
 
 
     - name: Restart Node App Server
-      command: "forever restart /home/ubuntu/{{ app_folder }}/app.js"
+      command: "forever restart {{ app_directory_path }}/app.js"
