@@ -1,5 +1,5 @@
 # Ansible Nodejs Certbot
-Using Ansible to install a stand alone Nodejs Server SSL Cert (Only for Ubuntu Systems)
+Ansible role to install a stand alone Nodejs Server SSL Cert (Only for Ubuntu Systems)
 
 
 ### Version
@@ -50,12 +50,13 @@ ansible-galaxy install
 ## Usage:
 1. This ansible role is assuming you have the server file named as "app.js"
 2. Certbot Requires port 80 or 443 to be available
-3. Default location path name  for app and remote user: (ex. '/home/ubuntu/{{ app_folder }}/') can be update
+3. Default location path name  for app and remote user: (ex. '{{ app_directory_path }}/') can be update
 4. Default location path name for yourapp/public for certbot challenge:
 ```yml
-path='/home/ubuntu/{{ app_folder }}/public/.well-known/acme-challenge'
+path='{{ app_directory_path }}/public/.well-known/acme-challenge'
  ```   
-5. App is up and running for Certbot challenge (/.well-known/acme-challenge)
+5. Certbot expects that App is up and running for Certbot challenge (/.well-known/acme-challenge)
+6. This ansible role will automatically modify app.js file to start using https and restart server
 
 
 ## Run
