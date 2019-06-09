@@ -30,7 +30,8 @@ ansible-galaxy install kennashka.ansible_nodejs_certbot
 ## Configure Hosts File (Optional Way to Give Permissions for Accessing Server)
 
 1. Replace (12.345.678.90) with your target server ip/domain address in hosts file 
-2. Add the file location to ssh pem key in hosts file (ex. ansible_ssh_private_key_file= directory/location/to/your/pem/key/file)
+2. Add the file location to ssh pem key in hosts file (ex. ansible_ssh_private_key_file= directory/location/to/your/pem/key/file.pem)
+3. Another option way is using boto for accessing server
 
 
 ## Configure "tasks/certbot.yml" File:
