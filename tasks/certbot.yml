@@ -18,10 +18,10 @@
 
   tasks:
     - name: Create a directory for acme challenge to serve through express
-      file: path='{{ app_directory_path }}/public/.well-known/acme-challenge' state=directory
+      file: path="{{ app_directory_path }}/public/.well-known/acme-challenge" state=directory
 
     - name: Create a directory to store letsencrypt cert files
-      file: path='{{ app_directory_path }}/sslcert' state=directory
+      file: path="{{ app_directory_path }}/sslcert" state=directory
 
     - name: Upgrade system
       apt: upgrade=dist update_cache=yes
@@ -48,16 +48,16 @@
     - name: Install required npm packages
       command: npm install express-force-ssl
       args:
-        chdir: {{ app_directory_path }}/
+        chdir: "{{ app_directory_path }}/"
 
     - name: Install required npm packages
       command: npm install helmet --save
       args:
-        chdir: {{ app_directory_path }}/
+        chdir: "{{ app_directory_path }}/"
 
     - name: Update app.js file to use https module and cert file path
       blockinfile:
-        path: {{ app_directory_path }}/app.js
+        path: "{{ app_directory_path }}/app.js"
         insertafter: "require"
         state: present
         marker: "// Added Path to cert files and npm module variables"
@@ -73,7 +73,7 @@
 
     - name: Update app.js file to use https module
       blockinfile:
-        path: {{ app_directory_path }}/app.js
+        path: "{{ app_directory_path }}/app.js"
         state: present
         insertbefore: BOF
         marker: "// New NPM Module Variables"
@@ -86,7 +86,7 @@
 
     - name: Add new lines where app should listen from app.js
       blockinfile:
-        path: {{ app_directory_path }}/app.js
+        path: "{{ app_directory_path }}/app.js"
         state: present
         insertafter: EOF
         marker: "// Https server line"
